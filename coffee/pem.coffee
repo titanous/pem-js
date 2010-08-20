@@ -1,3 +1,12 @@
+# RSA Key PEM Encoder
+# Copyright 2010 Jonathan Rudenberg
+# MIT Licensed
+#
+# Useful links:
+# OpenSSL 1024 bit RSA Private Key Breakdown - http://etherhack.co.uk/asymmetric/docs/rsa_key_breakdown.html
+# DER standard - http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf
+# ASN.1 Javascript decoder - http://lapo.it/asn1js/
+
 RSAEncodePrivatePEM = (key) ->
   encoded = '020100' # version header
   encoded = encoded + ASNIntValue(key.n, true) # modulus (prefixed w/null)

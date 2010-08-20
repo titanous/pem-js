@@ -4,12 +4,12 @@ RSAEncodePrivatePEM = function(key) {
   encoded = '020100';
   encoded = encoded + ASNIntValue(key.n, true);
   encoded = encoded + ASNIntValue(key.e, false);
-  encoded = encoded + ASNIntValue(key.d, true);
+  encoded = encoded + ASNIntValue(key.d, false);
   encoded = encoded + ASNIntValue(key.p, true);
   encoded = encoded + ASNIntValue(key.q, true);
-  encoded = encoded + ASNIntValue(key.dmp1, false);
-  encoded = encoded + ASNIntValue(key.dmq1, true);
-  encoded = encoded + ASNIntValue(key.coeff, true);
+  encoded = encoded + ASNIntValue(key.dmp1, true);
+  encoded = encoded + ASNIntValue(key.dmq1, false);
+  encoded = encoded + ASNIntValue(key.coeff, false);
   encoded = '30' + ASNLength(encoded) + encoded;
   return "-----BEGIN RSA PRIVATE KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END RSA PRIVATE KEY-----";
 };

@@ -11,12 +11,12 @@ RSAEncodePrivatePEM = (key) ->
   encoded = '020100' # version header
   encoded = encoded + ASNIntValue(key.n, true) # modulus (prefixed w/null)
   encoded = encoded + ASNIntValue(key.e, false) # public exponent
-  encoded = encoded + ASNIntValue(key.d, true) # private exponent
+  encoded = encoded + ASNIntValue(key.d, false) # private exponent
   encoded = encoded + ASNIntValue(key.p, true) # prime 1
   encoded = encoded + ASNIntValue(key.q, true) # prime 2
-  encoded = encoded + ASNIntValue(key.dmp1, false) # exponent 1
-  encoded = encoded + ASNIntValue(key.dmq1, true) # exponent 2
-  encoded = encoded + ASNIntValue(key.coeff, true) # coefficient
+  encoded = encoded + ASNIntValue(key.dmp1, true) # exponent 1
+  encoded = encoded + ASNIntValue(key.dmq1, false) # exponent 2
+  encoded = encoded + ASNIntValue(key.coeff, false) # coefficient
   encoded = '30' + ASNLength(encoded) + encoded # sequence header
   "-----BEGIN RSA PRIVATE KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END RSA PRIVATE KEY-----"
 

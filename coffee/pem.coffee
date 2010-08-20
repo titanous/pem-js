@@ -8,16 +8,26 @@ RSAEncodePrivatePEM = (key) ->
   encoded = encoded + ASNIntValue(key.dmp1, false) # exponent 1
   encoded = encoded + ASNIntValue(key.dmq1, true) # exponent 2
   encoded = encoded + ASNIntValue(key.coeff, true) # coefficient
-  encoded = '30' + ASNLength(encoded) + encoded # ASN.1 sequence header
+  encoded = '30' + ASNLength(encoded) + encoded # sequence header
   "-----BEGIN RSA PRIVATE KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END RSA PRIVATE KEY-----"
+
+RSAEncodePublicPEM = (key) ->
+  encoded = ASNIntValue(key.n, true) # modulus
+  encoded = encoded + ASNIntValue(key.e, false) # public exponent
+  encoded = '30' + ASNLength(encoded) + encoded # sequence header
+  encoded = '03' + ASNLength(encoded, 1) + '00' + encoded # bit string header
+  encoded = '300d06092a864886f70d0101010500' + encoded # object identifier header
+  encoded = '30' + ASNLength(encoded) + encoded # sequence header
+  "-----BEGIN PUBLIC KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END PUBLIC KEY-----"
 
 ASNIntValue = (integer, nullPrefixed) ->
   integer = int2hex(integer)
   integer = '00' + integer if nullPrefixed
   '02' + ASNLength(integer) + integer
 
-ASNLength = (content) ->
-  length = content.length / 2
+ASNLength = (content, extra) ->
+  extra = 0 if !extra?
+  length = (content.length / 2) + extra
   if length > 127 # long format
     length = int2hex(length)
     int2hex(0x80 + length.length / 2) + length

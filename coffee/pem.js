@@ -1,27 +1,34 @@
-var ASNValue, RSAEncodePrivatePEM, int2hex;
+var ASNIntValue, ASNLength, RSAEncodePrivatePEM, int2hex;
 RSAEncodePrivatePEM = function(key) {
   var encoded;
-  encoded = '30820264020100';
-  encoded = encoded + ASNValue(key.n, true);
-  encoded = encoded + ASNValue(key.e, false);
-  encoded = encoded + ASNValue(key.d, true);
-  encoded = encoded + ASNValue(key.p, true);
-  encoded = encoded + ASNValue(key.q, true);
-  encoded = encoded + ASNValue(key.dmp1, false);
-  encoded = encoded + ASNValue(key.dmq1, true);
-  encoded = encoded + ASNValue(key.coeff, true);
+  encoded = '020100';
+  encoded = encoded + ASNIntValue(key.n, true);
+  encoded = encoded + ASNIntValue(key.e, false);
+  encoded = encoded + ASNIntValue(key.d, true);
+  encoded = encoded + ASNIntValue(key.p, true);
+  encoded = encoded + ASNIntValue(key.q, true);
+  encoded = encoded + ASNIntValue(key.dmp1, false);
+  encoded = encoded + ASNIntValue(key.dmq1, true);
+  encoded = encoded + ASNIntValue(key.coeff, true);
+  encoded = '30' + ASNLength(encoded) + encoded;
   return "-----BEGIN RSA PRIVATE KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END RSA PRIVATE KEY-----";
 };
-ASNValue = function(integer, nullPrefixed) {
-  var extraBytes, length, value;
+ASNIntValue = function(integer, nullPrefixed) {
   integer = int2hex(integer);
-  extraBytes = nullPrefixed ? 1 : 0;
-  length = '81' + int2hex(integer.length / 2 + extraBytes);
-  value = '02' + length;
   if (nullPrefixed) {
-    value = value + '00';
+    integer = '00' + integer;
   }
-  return value + integer;
+  return '02' + ASNLength(integer) + integer;
+};
+ASNLength = function(content) {
+  var length;
+  length = content.length / 2;
+  if (length > 127) {
+    length = int2hex(length);
+    return int2hex(0x80 + length.length / 2) + length;
+  } else {
+    return int2hex(length);
+  }
 };
 int2hex = function(integer) {
   integer = integer.toString(16);

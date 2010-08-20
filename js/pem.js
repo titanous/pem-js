@@ -1,22 +1,22 @@
-var ASNIntValue, ASNLength, RSAEncodePrivatePEM, RSAEncodePublicPEM, int2hex;
-RSAEncodePrivatePEM = function(key) {
+var ASNIntValue, ASNLength, int2hex;
+RSAKey.prototype.privatePEM = function() {
   var encoded;
   encoded = '020100';
-  encoded = encoded + ASNIntValue(key.n, true);
-  encoded = encoded + ASNIntValue(key.e, false);
-  encoded = encoded + ASNIntValue(key.d, false);
-  encoded = encoded + ASNIntValue(key.p, true);
-  encoded = encoded + ASNIntValue(key.q, true);
-  encoded = encoded + ASNIntValue(key.dmp1, true);
-  encoded = encoded + ASNIntValue(key.dmq1, false);
-  encoded = encoded + ASNIntValue(key.coeff, false);
+  encoded = encoded + ASNIntValue(this.n, true);
+  encoded = encoded + ASNIntValue(this.e, false);
+  encoded = encoded + ASNIntValue(this.d, false);
+  encoded = encoded + ASNIntValue(this.p, true);
+  encoded = encoded + ASNIntValue(this.q, true);
+  encoded = encoded + ASNIntValue(this.dmp1, true);
+  encoded = encoded + ASNIntValue(this.dmq1, false);
+  encoded = encoded + ASNIntValue(this.coeff, false);
   encoded = '30' + ASNLength(encoded) + encoded;
   return "-----BEGIN RSA PRIVATE KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END RSA PRIVATE KEY-----";
 };
-RSAEncodePublicPEM = function(key) {
+RSAKey.prototype.publicPEM = function() {
   var encoded;
-  encoded = ASNIntValue(key.n, true);
-  encoded = encoded + ASNIntValue(key.e, false);
+  encoded = ASNIntValue(this.n, true);
+  encoded = encoded + ASNIntValue(this.e, false);
   encoded = '30' + ASNLength(encoded) + encoded;
   encoded = '03' + ASNLength(encoded, 1) + '00' + encoded;
   encoded = '300d06092a864886f70d0101010500' + encoded;

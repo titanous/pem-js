@@ -6,12 +6,12 @@
   test('encodes private key correctly', function() {
     var correctPrivatePEM;
     correctPrivatePEM = "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQC+qPkK750LNuH/2gKldfRx8dz3fjzqda0Y3sXHWNUZhdbnZvB7\nqeznsk/n3evGY1E2WNIU1gnYYVBRsl5OX2vWjmjLKiU5PLZOsJftHecjVWMszY43\nxxBOwgqofDLqP0kFj+Cbb2tczX0mE+l+m/At68P2iWpgXeZH47Lr/KcOQQIDAQAB\nAoGAIaLZ3O4M/K+AC41ArkQzDe8nlpo00QBVu2+B4PtxDQGpukVU49xEqVOx+SwT\nrnpTF41v8rEYJ45zhxY6wQTglzkFsdceoZu4uKb6lE5TpHOxo4IzQNH/Tp+YGTXI\naNn/Z69m4fQBOZbmMikUGL/rGo1SJZijTX0/X2KwiT+vseECQQD7y2luihkeWooD\n1PWE5RHy+ZVFbPPZfKkVbHZN6fXFzcvfrgZYQH/2DbGmyywmiLpjHzSXIvP+mkIY\nVUoK4KXtAkEAwdgrpTA1zzerWgOA2tuoRXMKtyRBBZ6dmEaszZRPguhvKg1EHxy+\n0J7bwSlw4XU2gJzmMmGA0Z3X9cpkm4j/JQJBAOsgvTijLuegZodDg23xNzytAk6N\nenzao05FNYh2dLKdBce/y174BEYx7XYy/eyR+3N6fXKxCiXzyMrOQlE8DNUCQARM\nM6OE7xx6An2LaFbx2cg4ZbtrvVlPi/TtVDV2nVCssJJBGwqJi516eCrPLWaCP8QY\nNm5VhRKgqkITy6k7H1UCQFp4/n/vaIF1s1O+dlJde4f3yxtVcV8QUM2A3nGR5Fj5\nF4unfQSb9Y5w4KN6+wOZQfPE3nWH4StAo3qAn0oD1o8=\n-----END RSA PRIVATE KEY-----";
-    return equals(RSAEncodePrivatePEM(key), correctPrivatePEM);
+    return equals(key.privatePEM(), correctPrivatePEM);
   });
   test('encodes public key correctly', function() {
     var correctPublicPEM;
     correctPublicPEM = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+qPkK750LNuH/2gKldfRx8dz3\nfjzqda0Y3sXHWNUZhdbnZvB7qeznsk/n3evGY1E2WNIU1gnYYVBRsl5OX2vWjmjL\nKiU5PLZOsJftHecjVWMszY43xxBOwgqofDLqP0kFj+Cbb2tczX0mE+l+m/At68P2\niWpgXeZH47Lr/KcOQQIDAQAB\n-----END PUBLIC KEY-----";
-    return equals(RSAEncodePublicPEM(key), correctPublicPEM);
+    return equals(key.publicPEM(), correctPublicPEM);
   });
   module('RSA Decryptor');
   test('decrypts OpenSSL output', function() {

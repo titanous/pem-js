@@ -23,6 +23,10 @@ RSAKey.prototype.publicPEM = function() {
   encoded = '30' + ASNLength(encoded) + encoded;
   return "-----BEGIN PUBLIC KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END PUBLIC KEY-----";
 };
+RSAKey.prototype.parsePEM = function(pem) {
+  pem = ASN1.decode(Base64.unarmor(pem)).sub;
+  return this.setPrivateEx(pem[1].content(), pem[2].content(), pem[3].content(), pem[4].content(), pem[5].content(), pem[6].content(), pem[7].content(), pem[8].content());
+};
 ASNIntValue = function(integer, nullPrefixed) {
   integer = int2hex(integer);
   if (nullPrefixed) {

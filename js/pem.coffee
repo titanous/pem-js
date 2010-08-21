@@ -29,6 +29,13 @@ RSAKey::publicPEM = ->
   encoded = '30' + ASNLength(encoded) + encoded # sequence header
   "-----BEGIN PUBLIC KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END PUBLIC KEY-----"
 
+RSAKey::parsePEM = (pem) ->
+  # TODO: Error messages
+  pem = ASN1.decode(Base64.unarmor(pem)).sub
+  this.setPrivateEx(pem[1].content(), pem[2].content(), pem[3].content(),
+                    pem[4].content(), pem[5].content(), pem[6].content(),
+                    pem[7].content(), pem[8].content())
+
 ASNIntValue = (integer, nullPrefixed) ->
   integer = int2hex(integer)
   integer = '00' + integer if nullPrefixed

@@ -11,15 +11,17 @@
  */
 function chars_from_hex(a){var c="";a=a.replace(/^(0x)?/g,"");a=a.replace(/[^A-Fa-f0-9]/g,"");a=a.split("");for(var b=0;b<a.length;b+=2)c+=String.fromCharCode(parseInt(a[b]+""+a[b+1],16));return c};
 
-/* CryptoMX Tools - Base64 encoder
+/* CryptoMX Tools - Base64 encoder/decoder
  * http://www.java2s.com/Code/JavaScriptDemo/Base64EncodingDecoding.htm
  *
  * Copyright (C) 2004 - 2006 Derek Buitenhuis
  * Modified February 2009 by TimStamp.co.uk
  * GPL v2 Licensed
  */
-function encode64(b){b=b.replace(/\0*$/g,"");var c="",d,e,f="",i,h,g="",a=0;do{d=b.charCodeAt(a++);e=b.charCodeAt(a++);f=b.charCodeAt(a++);i=d>>2;d=(d&3)<<4|e>>4;h=(e&15)<<2|f>>6;g=f&63;if(isNaN(e))h=g=64;else if(isNaN(f))g=64;c=c+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(i)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(g)}while(a<
-b.length);b="";c=c.split("");for(a=0;a<c.length;a++){if(a%64==0&&a>0)b+="\n";b+=c[a]}c.join();c=b%4;for(a=0;a<c;a++)b+="=";return b};
+function encode64(a){a=a.replace(/\0*$/g,"");var b="",d,e,g="",h,i,f="",c=0;do{d=a.charCodeAt(c++);e=a.charCodeAt(c++);g=a.charCodeAt(c++);h=d>>2;d=(d&3)<<4|e>>4;i=(e&15)<<2|g>>6;f=g&63;if(isNaN(e))i=f=64;else if(isNaN(g))f=64;b=b+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(i)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(f)}while(c<
+a.length);a="";b=b.split("");for(c=0;c<b.length;c++){if(c%64==0&&c>0)a+="\n";a+=b[c]}b.join();b=a%4;for(c=0;c<b;c++)a+="=";return a}
+function decode64(a){var b="",d,e,g="",h,i="",f=0;a=a.replace(/[^A-Za-z0-9\+\/\=\/n]/g,"");do{d="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(a.charAt(f++));e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(a.charAt(f++));h="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(a.charAt(f++));i="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(a.charAt(f++));d=d<<2|e>>4;e=(e&15)<<4|h>>2;g=(h&3)<<
+6|i;b+=String.fromCharCode(d);if(h!=64)b+=String.fromCharCode(e);if(i!=64)b+=String.fromCharCode(g)}while(f<a.length);return b=b.replace(/\0*$/g,"")};
 
 /* Basic JavaScript BN library - subset useful for RSA encryption
  * Extended JavaScript BN functions - required for RSA private ops
@@ -105,3 +107,31 @@ function RSAGenerate(a,b){var c=new SecureRandom,d=a>>1;this.e=parseInt(b,16);fo
 this.q.subtract(BigInteger.ONE),h=f.multiply(g);if(h.gcd(e).compareTo(BigInteger.ONE)==0){this.n=this.p.multiply(this.q);this.d=e.modInverse(h);this.dmp1=this.d.mod(f);this.dmq1=this.d.mod(g);this.coeff=this.q.modInverse(this.p);break}}}
 function RSADoPrivate(a){if(this.p==null||this.q==null)return a.modPow(this.d,this.n);var b=a.mod(this.p).modPow(this.dmp1,this.p);for(a=a.mod(this.q).modPow(this.dmq1,this.q);b.compareTo(a)<0;)b=b.add(this.p);return b.subtract(a).multiply(this.coeff).mod(this.p).multiply(this.q).add(a)}function RSADecrypt(a){a=this.doPrivate(parseBigInt(a,16));if(a==null)return null;return pkcs1unpad2(a,this.n.bitLength()+7>>3)}RSAKey.prototype.doPrivate=RSADoPrivate;RSAKey.prototype.setPrivate=RSASetPrivate;
 RSAKey.prototype.setPrivateEx=RSASetPrivateEx;RSAKey.prototype.generate=RSAGenerate;RSAKey.prototype.decrypt=RSADecrypt;
+
+/* ASN.1 JavaScript decoder
+ * Base64 JavaScript decoder
+ * Copyright (c) 2008-2009 Lapo Luchini <lapo@lapo.it>
+ * http://lapo.it/asn1js/
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+function Stream(a,b){if(a instanceof Stream){this.enc=a.enc;this.pos=a.pos}else{this.enc=a;this.pos=b}}Stream.prototype.get=function(a){if(a==undefined)a=this.pos++;if(a>=this.enc.length)throw"Requesting byte offset "+a+" on a stream of length "+this.enc.length;return this.enc[a]};Stream.prototype.hexDigits="0123456789abcdef";Stream.prototype.hexByte=function(a){return this.hexDigits.charAt(a>>4&15)+this.hexDigits.charAt(a&15)};
+Stream.prototype.hexDump=function(a,b){for(var d="",c=a;c<b;++c)d+=this.hexByte(this.get(c));return d};Stream.prototype.parseInteger=function(a,b){return this.hexDump(a,b)};function ASN1(a,b,d,c,f){this.stream=a;this.header=b;this.length=d;this.tag=c;this.sub=f}
+ASN1.prototype.content=function(){if(this.tag==undefined)return null;if(this.tag>>6!=0)return this.sub==null?null:"("+this.sub.length+")";var a=this.tag&31,b=this.posContent(),d=Math.abs(this.length);switch(a){case 2:return this.stream.parseInteger(b,b+d)}return null};ASN1.prototype.posStart=function(){return this.stream.pos};ASN1.prototype.posContent=function(){return this.stream.pos+this.header};ASN1.prototype.posEnd=function(){return this.stream.pos+this.header+Math.abs(this.length)};
+ASN1.decodeLength=function(a){var b=a.get(),d=b&127;if(d==b)return d;if(d>3)throw"Length over 24 bits not supported at position "+(a.pos-1);if(d==0)return-1;for(var c=b=0;c<d;++c)b=b<<8|a.get();return b};ASN1.hasContent=function(a,b,d){if(a&32)return true;if(a<3||a>4)return false;var c=new Stream(d);a==3&&c.get();if(c.get()>>6&1)return false;try{var f=ASN1.decodeLength(c);return c.pos-d.pos+f==b}catch(e){return false}};
+ASN1.decode=function(a){a instanceof Stream||(a=new Stream(a,0));var b=new Stream(a),d=a.get(),c=ASN1.decodeLength(a),f=a.pos-b.pos,e=null;if(ASN1.hasContent(d,c,a)){var h=a.pos;d==3&&a.get();e=[];if(c>=0){for(var g=h+c;a.pos<g;)e[e.length]=ASN1.decode(a);if(a.pos!=g)throw"Content size is not correct for container starting at offset "+h;}else try{for(;;){g=ASN1.decode(a);if(g.tag==0)break;e[e.length]=g}c=h-a.pos}catch(i){throw"Exception while decoding undefined length content: "+i;}}else a.pos+=c;
+return new ASN1(b,f,c,d,e)};
+
+Base64={};
+Base64.decode=function(d){if(Base64.decoder==undefined){for(var a=[],b=0;b<64;++b)a["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)]=b;for(b=0;b<9;++b)a["= \u000c\n\r\t\u00a0\u2028\u2029".charAt(b)]=-1;Base64.decoder=a}a=[];var c=0,f=0;for(b=0;b<d.length;++b){var e=d.charAt(b);if(e=="=")break;e=Base64.decoder[e];if(e!=-1){if(e==undefined)throw"Illegal character at offset "+b;c|=e;if(++f>=4){a[a.length]=c>>16;a[a.length]=c>>8&255;a[a.length]=c&255;f=c=0}else c<<=6}}switch(f){case 1:throw"Base64 encoding incomplete: at least 2 bits missing";
+case 2:a[a.length]=c>>10;break;case 3:a[a.length]=c>>16;a[a.length]=c>>8&255;break}return a};Base64.re=/-----BEGIN [^-]+-----([A-Za-z0-9+\/=\s]+)-----END [^-]+-----|begin-base64[^\n]+\n([A-Za-z0-9+\/=\s]+)====/;Base64.unarmor=function(d){var a=Base64.re.exec(d);if(a)if(a[1])d=a[1];else if(a[2])d=a[2];return Base64.decode(d)};

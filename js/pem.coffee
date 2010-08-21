@@ -1,4 +1,4 @@
-# RSA Key PEM Encoder
+# RSA Key PEM Encoder/Decoder
 # Copyright 2010 Jonathan Rudenberg
 # MIT Licensed
 #

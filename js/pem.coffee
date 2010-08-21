@@ -9,20 +9,20 @@
 
 RSAKey::privatePEM = ->
   encoded = '020100' # version header
-  encoded = encoded + ASNIntValue(this.n, true) # modulus (prefixed w/null)
-  encoded = encoded + ASNIntValue(this.e, false) # public exponent
-  encoded = encoded + ASNIntValue(this.d, false) # private exponent
-  encoded = encoded + ASNIntValue(this.p, true) # prime 1
-  encoded = encoded + ASNIntValue(this.q, true) # prime 2
-  encoded = encoded + ASNIntValue(this.dmp1, true) # exponent 1
-  encoded = encoded + ASNIntValue(this.dmq1, false) # exponent 2
-  encoded = encoded + ASNIntValue(this.coeff, false) # coefficient
+  encoded += ASNIntValue(this.n, true) # modulus (prefixed w/null)
+  encoded += ASNIntValue(this.e, false) # public exponent
+  encoded += ASNIntValue(this.d, false) # private exponent
+  encoded += ASNIntValue(this.p, true) # prime 1
+  encoded += ASNIntValue(this.q, true) # prime 2
+  encoded += ASNIntValue(this.dmp1, true) # exponent 1
+  encoded += ASNIntValue(this.dmq1, false) # exponent 2
+  encoded += ASNIntValue(this.coeff, false) # coefficient
   encoded = '30' + ASNLength(encoded) + encoded # sequence header
   "-----BEGIN RSA PRIVATE KEY-----\n" + encode64(chars_from_hex(encoded)) + "\n-----END RSA PRIVATE KEY-----"
 
 RSAKey::publicPEM = ->
   encoded = ASNIntValue(this.n, true) # modulus
-  encoded = encoded + ASNIntValue(this.e, false) # public exponent
+  encoded += ASNIntValue(this.e, false) # public exponent
   encoded = '30' + ASNLength(encoded) + encoded # sequence header
   encoded = '03' + ASNLength(encoded, 1) + '00' + encoded # bit string header
   encoded = '300d06092a864886f70d0101010500' + encoded # object identifier header

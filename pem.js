@@ -49,6 +49,8 @@ ASNLength = function(content, extra) {
 };
 int2hex = function(integer) {
   integer = integer.toString(16);
-  integer.length % 2 !== 0 ? (integer = '0' + integer) : null;
+  if (integer.length % 2 !== 0) {
+    integer = '0' + integer;
+  }
   return integer;
 };

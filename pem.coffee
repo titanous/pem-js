@@ -32,9 +32,9 @@ RSAKey::publicPEM = ->
 RSAKey::parsePEM = (pem) ->
   # TODO: Error messages
   pem = ASN1.decode(Base64.unarmor(pem)).sub
-  this.setPrivateEx(pem[1].content(), pem[2].content(), pem[3].content(),
-                    pem[4].content(), pem[5].content(), pem[6].content(),
-                    pem[7].content(), pem[8].content())
+  this.setPrivateEx pem[1].content(), pem[2].content(), pem[3].content(), \
+                    pem[4].content(), pem[5].content(), pem[6].content(), \
+                    pem[7].content(), pem[8].content()
 
 ASNIntValue = (integer, nullPrefixed) ->
   integer = int2hex(integer)
